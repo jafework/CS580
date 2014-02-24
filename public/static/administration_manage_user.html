@@ -7,59 +7,12 @@
     <title>Administration</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	
-  <script>
-
-    /*
-        User Class:
-        An instance of this class represents a single User object.
-
-        Global Variables:
-        ID
-        Name
-        Email
-
-        Constructors:
-        User(ID)
-        User(ID,Name,Email)
-
-        Methods:
-        Save() - Saves the changes to the server
-        Reload() - Reloads the user data from the server
-    */
-
-
-    function User(ID,Name,Email){
-      this.ID = ID;
-      this.Name = Name;
-      this.Email = Email;
-      this.Save = User_Save;
-      this.Reload = User_Reload;
-    }
-
-    function User_Reload(completionHandler){
-      var self = this;
-      $.get( serverAddress + "user/" + self.ID, function( data ) {
-        self.ID = data["users"]["ID"];
-        self.Name = data["users"]["Name"];
-        self.Email = data["users"]["Email"];
-        completionHandler();
-      });
-    }
-
-    function User_Save(){
-      //Post Changes
-    }
-
-  </script>
-  
-  <script>
+	<script>
 
     //GLOBAL VARIABLES
     var tableData; //All Downloaded Table Info
     var serverAddress = "http://localhost:3000/";
-    var currentUser = null;
-    
+
 		$( document ).ready(function() {
 			fetchUsers();
 		});
@@ -108,7 +61,7 @@
 					var user = data["users"][i];
 					html += "<tr>";
 					html += "<td>" + user["ID"] + "</td>";
-          html += "<td>" + "<button class='btn btn-primary' onclick='ShowUser("+ user["ID"] + ");'>" + user["Name"] + "</button>" + "</td>";
+          html += "<td>" + "<a href ='" + serverAddress + "administration/user/" +  user["ID"] + "'>" + user["Name"] + "</a>" + "</td>";
 					html += "<td>" + user["Email"] + "</td>";
 					html += "</tr>";
 				}
@@ -116,33 +69,6 @@
 				$("#UserTable tbody").html(tableData);
 			});
 		}
-
-    function ShowUser(ID){
-      currentUser = new User(ID,null,null);
-      var completionHandler = function(){
-        console.log(currentUser.Name);
-        $('#SelectedUserDefault').css("display","inline");
-        $('#SelectedUserEditButton').css("display","inline");
-        $('#SelectedUserEdit').css("display","none");
-        $('#SelectedUserSaveButton').css("display","none");
-
-        $('#SelectedUserDefaultName').html(currentUser.Name);
-        $('#SelectedUserEditName').val(currentUser.Name);
-        $('#SelectedUserDefaultEmail').html(currentUser.Email);
-        $('#SelectedUserEditEmail').val(currentUser.Email);
-
-        $('#SelectedUserModal').modal('show');
-        $('#SelectedUserTitle').html("User ID: " + currentUser.ID);
-      };
-      currentUser.Reload(completionHandler);
-    }
-
-    function EditUser(){
-      $('#SelectedUserDefault').css("display","none");
-      $('#SelectedUserEditButton').css("display","none");
-      $('#SelectedUserEdit').css("display","inline");
-      $('#SelectedUserSaveButton').css("display","inline");
-    }
 
     function FilterUsers(value){
       //Reset the table
@@ -188,7 +114,7 @@
               <li class="dropdown active">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li class="active"><a>Manage Users</a></li>
+                  <li class="active"><a href="#">Manage Users</a></li>
                   <li><a href="#">Manage Rooms</a></li>
                   <li><a href="#">Manage Meetings</a></li>
                 </ul>
@@ -214,56 +140,6 @@
         <tbody>
         </tbody>
       </table>
-
-      <!-- Modal -->
-      <div class="modal fade" id="SelectedUserModal" tabindex="-1" role="dialog" aria-labelledby="SelectedUserLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" id="SelectedUserTitle">Modal title</h4>
-            </div>
-            <div class="modal-body">
-              
-              <div id ="SelectedUserDefault">
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Name</label><br>
-                  <h4><span class="label label-primary" id="SelectedUserDefaultName">Joseph Afework</span></h4>
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Email Address</label><br>
-                  <h4><span class="label label-primary" id="SelectedUserDefaultEmail">test@test.com</span></h4>
-                </div>
-              </div>
-
-              <div id ="SelectedUserEdit" style="display:none;">
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Name</label>
-                  <input type="text" class="form-control" id="SelectedUserEditName" placeholder="Name">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Email address</label>
-                  <input type="email" class="form-control" id="SelectedUserEditEmail" placeholder="Email">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">New Password</label>
-                  <input type="password" class="form-control" id="SelectedUserEditNewPassword" placeholder="Password">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Confirm New Password</label>
-                  <input type="password" class="form-control" id="SelectedUserEditNewPasswordConfirm" placeholder="Password">
-                </div>
-              </div>
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-              <button id="SelectedUserEditButton" type="button" class="btn btn-warning" onclick="EditUser();">Edit User</button>
-              <button id="SelectedUserSaveButton" type="button" class="btn btn-danger" style="display:none;" onclick="SaveUser();">Save Changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
     </div> <!-- /container -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
