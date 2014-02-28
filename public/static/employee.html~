@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<!--
+	Dopetrope 2.5 by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Left Sidebar - Dopetrope by HTML5 UP</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,900,300italic" rel="stylesheet" />
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.dropotron.min.js"></script>
+		<script src="js/config.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-panels.min.js"></script>
+
+		<link href='js/fullcalendar/fullcalendar.css' rel='stylesheet' />
+		<link href='js/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+		<link href='js/lib/cupertino/jquery-ui.min.css' rel='stylesheet'/>
+
+		<script src='js/lib/moment.min.js'></script>
+		
+		<script src='js/lib/jquery-ui.custom.min.js'></script>
+		<script src='js/fullcalendar/fullcalendar.min.js'></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel-noscript.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-desktop.css" />
+		</noscript>
+		<script>
+
+			$(document).ready(function() {
+				$('#calendar').fullCalendar({
+					header: {
+						left: 'prev,next today',
+						center: 'title',
+						right: 'month,basicWeek,basicDay'
+					},
+					defaultDate: new Date(),
+					editable: true,
+					events: [
+						{
+							title: 'All Day Event',
+							start: '2014-01-01'
+						},
+						{
+							title: 'Long Event',
+							start: '2014-01-07',
+							end: '2014-01-10'
+						},
+						{
+							id: 999,
+							title: 'Repeating Event',
+							start: '2014-01-09T16:00:00',
+						},
+						{
+							id: 999,
+							title: 'Repeating Event',
+							start: '2014-01-16T16:00:00'
+						},
+						{
+							title: 'Meeting',
+							start: '2014-01-12T10:30:00',
+							end: '2014-01-12T12:30:00'
+						},
+						{
+							title: 'Lunch',
+							start: '2014-01-12T13:00:00',
+							invitedBy: 'somebody',
+							accept: 'yes',
+							decline: 'no'
+						},
+						{
+							title: 'Birthday Party',
+							start: '2014-01-13T07:00:00'
+						},
+						{
+							title: 'Click for Google',
+							url: 'http://google.com/',
+							start: '2014-01-28'
+						}
+					]
+				});
+				
+			});
+
+		</script>
+		<style>
+		#calendar {
+			width: 100%;
+			}
+		#calendar {
+			margin-top: 40px;
+			text-align: center;
+			font-size: 14px;
+			font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+			}
+
+
+		</style>
+		<!--[if lte IE 8]><script src="js/html5shiv.js"></script><link rel="stylesheet" href="css/ie8.css" /><![endif]-->
+	</head>
+	<body class="left-sidebar">
+
+		<!-- Header Wrapper -->
+			<div id="header-wrapper">
+				<div class="container">
+					<div class="row">
+						<div class="12u">
+						
+							<!-- Header -->
+								<section id="header">
+									
+									<!-- Logo -->
+										<h1><a href="#">Welcome To Meeting Scheduler</a></h1>
+									
+									<!-- Nav -->
+										<nav id="nav">
+											<ul>
+												<li><a href="index.html">Home</a></li>
+												<li><a href="">Hours</a></li>
+												<li><a href="">Contact Us</a></li>
+												<li><a href="">Logout</a></li>
+											</ul>
+										</nav> 
+
+								</section>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		<!-- Main Wrapper -->
+			<div id="main-wrapper">
+				<div class="container">
+					<div class="row">
+						<div class="12u">
+							
+							<!-- Portfolio -->
+								<section>
+									<div>
+										<div class="row">
+											<div class="4u">
+											
+												<!-- Sidebar -->
+													<section class="box">
+														<header>
+															<h3>Employee</h3>
+														</header>
+														<p>Welcome To Meeting Scheduler</p>
+														<ul class="divided">
+															<li><a href="#">My Account</a></li>
+															<li><a href="#">Personal Information</a></li>
+															<li><a href="#">Meeting List</a></li>
+															<li><a href="#">Messages</a></li>
+														</ul>
+														<footer>
+															<a href="#" class="button alt">Display My Schedule </a>
+														</footer>
+													</section>
+													<section class="box">
+													</section>
+
+											</div>
+											<div class="8u skel-cell-important">
+												
+												<!-- Content -->
+													<article class="box is-post">
+														<div id='calendar'></div>
+														<header>
+															<h2>Meeting Scheduler</h2>
+															<span class="byline">Title</span>
+														</header>
+														<p>
+																Text go here
+														</p>
+														<p>
+															
+																Text go here
+														</p>
+														<section>
+															<header>
+																<h3>Title</h3>
+															</header>
+															<p>
+																Text go here
+															</p>
+															<p>
+																
+															</p>
+														</section>
+														<section>
+															<header>
+																<h3> Title </h3>
+															</header>
+															<p>
+																 Text go here
+															</p>
+														</section>
+													</article>
+
+											</div>
+										</div>
+									</div>
+								</section>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- Footer Wrapper -->
+			<div id="footer-wrapper">
+				
+				<!-- Footer -->
+					<section id="footer" class="container">
+						<div class="row">
+							<div class="8u">
+
+				
+			</div>
+
+	</body>
+</html>
