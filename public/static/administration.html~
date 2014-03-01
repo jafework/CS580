@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Administration1</title>
+    <title>Administration</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	
@@ -193,7 +193,7 @@
                   <li><a href="#">Manage Meetings</a></li>
                 </ul>
               </li>
-              <li><a href="#">My Calendar</a></li>
+              <li><a href="/calendar.html">My Calendar</a></li>
               <li><a href="#">My Avaliablity</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

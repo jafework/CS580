@@ -33,6 +33,15 @@ app.get('/', routes.index);
 app.get('/administration', function(req, res){
   res.sendfile(__dirname + '/public/static/administration.html');
 });
+app.get('/index', function(req, res){
+  res.sendfile(__dirname + '/public/static/index.html');
+});
+app.get('/employee', function(req, res){
+  res.sendfile(__dirname + '/public/static/employee.html');
+});
+app.get('/calendar', function(req, res){
+  res.sendfile(__dirname + '/public/static/calendar.html');
+});
 
 app.get('/user', user.get_user); 
 //Return All Users
