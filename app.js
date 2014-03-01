@@ -6,6 +6,7 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
+var schedule = require('./routes/schedule');
 var http = require('http');
 var path = require('path');
 
@@ -42,6 +43,9 @@ app.get('/employee', function(req, res){
 app.get('/calendar', function(req, res){
   res.sendfile(__dirname + '/public/static/calendar.html');
 });
+
+app.get('/schedule', schedule.get_calendar); 
+//Return User Calendar
 
 app.get('/user', user.get_user); 
 //Return All Users
