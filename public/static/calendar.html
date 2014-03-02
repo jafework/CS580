@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	
+    <!-- calendar library -->
+    <link href='js/fullcalendar/fullcalendar.css' rel='stylesheet' />
+		<link href='js/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+		<link href='js/lib/cupertino/jquery-ui.min.css' rel='stylesheet'/>
+
+    <script src='js/lib/moment.min.js'></script>
+		
+		<script src='js/lib/jquery-ui.custom.min.js'></script>
+		<script src='js/fullcalendar/fullcalendar.min.js'></script>
+    <!-- end calendar requirement -->
+
+  <script>
+
+    /*
+        User Class:
+        An instance of this class represents a single User object.
+
+        Global Variables:
+        ID
+        Name
+        Email
+
+        Constructors:
+        User(ID)
+        User(ID,Name,Email)
+
+        Methods:
+        Save() - Saves the changes to the server
+        Reload() - Reloads the user data from the server
+    */
+
+
+    function User(ID,Name,Email){
+      this.ID = ID;
+      this.Name = Name;
+      this.Email = Email;
+      this.Save = User_Save;
+      this.Reload = User_Reload;
+    }
+
+    function User_Reload(completionHandler){
+      var self = this;
+      $.get( serverAddress + "user/" + self.ID, function( data ) {
+        self.ID = data["users"]["ID"];
+        self.Name = data["users"]["Name"];
+        self.Email = data["users"]["Email"];
+        completionHandler();
+      });
+    }
+
+    function User_Save(){
+      //Post Changes
+    }
+
+  </script>
+  
+  <script>
+
+    //GLOBAL VARIABLES
+    var tableData; //All Downloaded Table Info
+    var serverAddress = "http://localhost:3000/";
+    var currentUser = null;
+    
+		$( document ).ready(function() {
+			fetchUsers();
+		});
+
+		function fetchUsers(){
+			$.get( serverAddress + "schedule", function( data ) {
+				console.log(data.events);
+				$('#calendar').fullCalendar
+				({
+					header: {
+						left: 'prev,next today',
+						center: 'title',
+						right: 'month,basicWeek,basicDay'
+					},
+					defaultDate: new Date(),
+					events:data.events
+				});
+			})
+		}
+
+    function ShowUser(ID){
+      currentUser = new User(ID,null,null);
+      var completionHandler = function(){
+        console.log(currentUser.Name);
+        $('#SelectedUserDefault').css("display","inline");
+        $('#SelectedUserEditButton').css("display","inline");
+        $('#SelectedUserEdit').css("display","none");
+        $('#SelectedUserSaveButton').css("display","none");
+
+        $('#SelectedUserDefaultName').html(currentUser.Name);
+        $('#SelectedUserEditName').val(currentUser.Name);
+        $('#SelectedUserDefaultEmail').html(currentUser.Email);
+        $('#SelectedUserEditEmail').val(currentUser.Email);
+
+        $('#SelectedUserModal').modal('show');
+        $('#SelectedUserTitle').html("User ID: " + currentUser.ID);
+      };
+      currentUser.Reload(completionHandler);
+    }
+
+    function EditUser(){
+      $('#SelectedUserDefault').css("display","none");
+      $('#SelectedUserEditButton').css("display","none");
+      $('#SelectedUserEdit').css("display","inline");
+      $('#SelectedUserSaveButton').css("display","inline");
+    }
+
+    function FilterUsers(value){
+      //Reset the table
+      $("#UserTable tbody").html(tableData);
+
+      $("#UserTable tbody tr").each(function(){
+        //this contains a tr element
+        var shouldRemove = true;
+        $(this).find("td").each(function(){
+          //this contains a td element
+          if($(this).text().indexOf(value.value)>-1){
+            shouldRemove = false;
+            return false;
+          }
+        });
+        if(shouldRemove == true){
+          //Row doesn't contain the search text so we remove the row
+          $(this).remove();
+        }
+      });
+    }
+
+	</script>
+
+  </head>
+  <body>
+        <div class="container">
+
+      <!-- Static navbar -->
+      <div class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Bronco Meeting Center</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="dropdown active">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li class="active"><a>Manage Users</a></li>
+                  <li><a href="#">Manage Rooms</a></li>
+                  <li><a href="#">Manage Meetings</a></li>
+                </ul>
+              </li>
+              <li><a href="#">My Calendar</a></li>
+              <li><a href="#">My Avaliablity</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="./">Account Settings</a></li>
+              <li><a href="../navbar-fixed-top/">Sign Out</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </div>
+
+      <!-- Main component for a primary marketing message or call to action -->
+    	<h2>Users</h2>
+	<div id='calendar'></div>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </body>
+</html>
