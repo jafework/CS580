@@ -108,8 +108,8 @@
 				for(var i = 0; i<data["users"].length;i++){
 					var user = data["users"][i];
 					html += "<tr>";
-					html += "<td>" + user["ID"] + "</td>";
-          html += "<td>" + "<button class='btn btn-primary' onclick='ShowUser("+ user["ID"] + ");'>" + user["Name"] + "</button>" + "</td>";
+					html += "<td>" + user["UserID"] + "</td>";
+          html += "<td>" + "<button class='btn btn-primary' onclick='ShowUser("+ user["UserID"] + ");'>" + user["Name"] + "</button>" + "</td>";
 					html += "<td>" + user["Email"] + "</td>";
 					html += "</tr>";
 				}

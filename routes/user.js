@@ -1,39 +1,51 @@
 /*
-	User Schema:
+	User Table Schema:
 	ID----------(int)
 	Name--------(string)
 	Email-------(string)
 	Password----(string)
+
+	Mock JSON Structure:
+	{
+		"response":[
+			{
+				"UserID":1,
+				"Name":"Joseph",
+				"Email":"test@test.com",
+			},
+			{
+				"UserID":2,
+				"Name":"Lan",
+				"Email":"lan@gmail.com",
+			}
+		],
+		"error":{
+			"code":0,
+			"status":"success"
+		}
+	}
 */
 
-var mockData = {
-	"users":[
-		{
-			"ID":1,
-			"Name":"Joseph",
-			"Email":"test@test.com",
-		},
-		{
-			"ID":2,
-			"Name":"Lan",
-			"Email":"lan@gmail.com",
-		}
-	],
-	"error":{
-		"code":0,
-		"status":"success"
-	}
-};
+var connection;
 
 //Return All Users
+module.exports = function(con){
+	connection = con;
+	return exports;
+}
+
 exports.get_user = function(req, res){
-	var response = {
-		"users": mockData["users"],
-		"error": mockData["error"]
-	};
-	res.contentType('application/json');
-  	var json = JSON.stringify(response);
-  	res.send(json);
+	
+	connection.query('select * from Users', function(err, data) {		
+		var response = {
+			"users": data,
+			"error": null
+		};
+		res.contentType('application/json');
+  		var json = JSON.stringify(response);
+  		res.send(json);
+
+	});
 }
 
 //Return Individual User Record With ID
@@ -55,6 +67,10 @@ exports.get_user_ID = function(req, res){
   	res.send(json);
 }
 
+//Delete User With ID
+exports.delete_user_with_ID = function(req, res){
+
+};
 /*
 app.post('/user/:ID', user.post_user_ID); 
 //Edits Individual User Record With ID
