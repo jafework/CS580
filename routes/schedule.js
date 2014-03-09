@@ -63,7 +63,19 @@ module.exports = function(con){
 //Return All Users
 exports.get_calendar = function(req, res){
 
-	connection.query('select * from Meeting', function(err, data) {		
+	connection.query('select * from Meeting', function(err, data) {
+
+		var inviterID = -1;
+		for(index in data)
+		{
+			if(data[index]["OwnerUserID"] != -1)
+			{
+				inviterId = data[index]["OwnerUserID"];
+
+				data[index]["OwnerUserID"] = getName(inviterId);
+				console.log(data[index]["OwnerUserID"]);
+			}
+		}		
 		var response = {
 			"events": data,
 			"error": null
@@ -72,6 +84,20 @@ exports.get_calendar = function(req, res){
 	  	var json = JSON.stringify(response);
 		
 	  	res.send(json);
+	});
+}
+
+function getName(req, res)
+{
+	connection.query('select * from Users', function(err, data) {
+		for(index in data)
+		{
+			if(req == data[index]["UserID"]){
+				console.log(data[index]["Name"]);
+				return data[index]["Name"];						
+			}
+
+		}
 	});
 }
 /*

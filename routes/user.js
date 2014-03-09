@@ -54,8 +54,6 @@ exports.get_user_ID = function(req, res){
 	connection.query('select * from Users', function(err, data) {	
 	
 		var userID = parseInt(req.params.ID);
-		console.log("abcd",userID);
-		console.log(data[1]["Name"]);
 		var userInfo;
 		for(index in data){
 			if(data[index]["UserID"] === userID){
