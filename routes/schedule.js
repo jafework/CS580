@@ -55,17 +55,24 @@ var mockData = {
 	}
 };
 
-//Return All Users
-exports.get_calendar = function(req, res){
-	var response = {
-		"events": mockData["events"],
-		"error": mockData["error"]
-	};
-	res.contentType('application/json');
-  	var json = JSON.stringify(response);
-  	res.send(json);
+module.exports = function(con){
+	connection = con;
+	return exports;
 }
 
+//Return All Users
+exports.get_calendar = function(req, res){
+
+	connection.query('select * from Meeting', function(err, data) {		
+		var response = {
+			"events": data,
+			"error": null
+		};
+		res.contentType('application/json');
+	  	var json = JSON.stringify(response);
+	  	res.send(json);
+	});
+}
 /*
 app.post('/user/:"id"', user.post_user_"id"); 
 //Edits Individual User Record With "id"
