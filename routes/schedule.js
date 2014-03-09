@@ -70,6 +70,7 @@ exports.get_calendar = function(req, res){
 		};
 		res.contentType('application/json');
 	  	var json = JSON.stringify(response);
+		
 	  	res.send(json);
 	});
 }

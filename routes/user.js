@@ -50,7 +50,31 @@ exports.get_user = function(req, res){
 
 //Return Individual User Record With ID
 exports.get_user_ID = function(req, res){
-	var userID = parseInt(req.params.ID);
+
+	connection.query('select * from Users', function(err, data) {	
+	
+		var userID = parseInt(req.params.ID);
+		console.log("abcd",userID);
+		console.log(data[1]["Name"]);
+		var userInfo;
+		for(index in data){
+			if(data[index]["UserID"] === userID){
+				userInfo = data[index]["Name"];
+				break;
+			}
+		}
+	
+		var response = {
+			"Name": userInfo,
+			"error": null
+		};
+		res.contentType('application/json');
+  		var json = JSON.stringify(response);
+  		res.send(json);
+
+	});
+
+	/*var userID = parseInt(req.params.ID);
 	var userInfo;
 	for(index in mockData["users"]){
 		if(mockData["users"][index]["ID"] === userID){
@@ -64,7 +88,7 @@ exports.get_user_ID = function(req, res){
 	};
 	res.contentType('application/json');
   	var json = JSON.stringify(response);
-  	res.send(json);
+  	res.send(json);*/
 }
 
 //Delete User With ID
