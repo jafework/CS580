@@ -19,7 +19,7 @@ exports.check_login = function(req, res){
 			response = true;
 			res.cookie('login', 'true');
 			res.cookie('id', data[0]['UserID']);
-			res.cookie('admin',false);
+			res.cookie('admin','false');
 		}
 		else{
 			response = false;

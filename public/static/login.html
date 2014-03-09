@@ -17,6 +17,17 @@
 
       var serverAddress = "http://localhost:3000/";
 
+      function getCookie(cname){
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++)
+          {
+          var c = ca[i].trim();
+          if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+        }
+        return "";
+      }
+
       function Login(){
         var $email = $("#email");
         var $pass = $("#password");
@@ -27,6 +38,15 @@
         $.post( serverAddress + "login", credentials , function( response ) {
             console.log(response);
             console.log(document.cookie);
+            if(response == true){
+              console.log(getCookie("admin"));
+              if(getCookie("admin") == 'true'){
+                window.location = serverAddress + "administration";
+              }
+              else{
+                window.location = serverAddress + "calendar";
+              }
+            }
         });
       }
 

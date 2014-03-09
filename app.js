@@ -40,6 +40,9 @@ var session;
 
 var user = require('./routes/user')(connection);
 var login = require('./routes/login')(connection,session);
+
+var isLoggedIn
+
 var schedule = require('./routes/schedule')(connection);
 
 app.get('/', routes.index);
