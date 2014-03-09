@@ -30,19 +30,28 @@ if ('development' == app.get('env')) {
 }
 
 var connection = mysql.createConnection({
-host : 'mysql.orderofn.com',
-user : 'orderofncom',
-password : 'fFYEptEA',
-database : 'orderofn_com'
+	host : 'mysql.orderofn.com', 
+	user : 'orderofncom', 
+	password : 'fFYEptEA', 
+	database : 'orderofn_com'
 });
 connection.connect();
+
+var session;
+
 var user = require('./routes/user')(connection);
+var login = require('./routes/login')(connection,session);
 
 app.get('/', routes.index);
 
 app.get('/administration', function(req, res){
   res.sendfile(__dirname + '/public/static/administration.html');
 });
+
+app.get('/login', function(req, res){
+  res.sendfile(__dirname + '/public/static/login.html');
+});
+
 app.get('/index', function(req, res){
   res.sendfile(__dirname + '/public/static/index.html');
 });
@@ -52,6 +61,9 @@ app.get('/employee', function(req, res){
 app.get('/calendar', function(req, res){
   res.sendfile(__dirname + '/public/static/calendar.html');
 });
+
+//--------------------------------Login Routes------------------------------------------|
+app.post('/login', login.check_login);
 
 //--------------------------------User Routes------------------------------------------|
 
