@@ -6,7 +6,6 @@
 var express = require('express');
 var mysql = require('mysql');
 var routes = require('./routes');
-var schedule = require('./routes/schedule');
 var http = require('http');
 var path = require('path');
 var app = express();
@@ -41,6 +40,7 @@ var session;
 
 var user = require('./routes/user')(connection);
 var login = require('./routes/login')(connection,session);
+var schedule = require('./routes/schedule')(connection);
 
 app.get('/', routes.index);
 
@@ -72,6 +72,9 @@ app.post('/login', login.check_login);
 
 //Create a new administrator
 //app.post('/user/administrator', user.create_new_administrator);
+
+//Return meeting
+app.get('/schedule', schedule.get_calendar);
 
 //Return All Users
 app.get('/user', user.get_user); 
