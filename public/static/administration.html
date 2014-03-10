@@ -35,6 +35,37 @@
       this.Email = Email;
       this.Save = User_Save;
       this.Reload = User_Reload;
+      this.Create = User_Create;
+    }
+
+    function ShowCreate(){
+        $('#SelectedUserDefault').css("display","none");
+        $('#SelectedUserEditButton').css("display","none");
+        $('#SelectedUserEdit').css("display","inline");
+        $('#SelectedUserSaveButton').css("display","inline");
+
+        $('#SelectedUserModal').modal('show');
+        $('#SelectedUserTitle').html("Create New User: ");
+    }
+
+    function SaveUser(){
+      User_Create();
+    }
+
+    function User_Create(completionHandler){
+      
+      var newName = $('#SelectedUserEditName').val();
+      var newEmail = $('#SelectedUserEditEmail').val();
+      var newPassword = $('#SelectedUserEditNewPasswordConfirm').val();
+      var postData = {
+        name : newName,
+        email : newEmail,
+        password: newPassword
+      }
+
+      $.post(serverAddress + "user/", postData, function(data){
+        completionHandler();
+      });
     }
 
     function User_Reload(completionHandler){
@@ -206,7 +237,7 @@
       </div>
 
       <!-- Main component for a primary marketing message or call to action -->
-    	<h2>Users</h2><button style="margin-bottom:10px;margin-right:10px;" class="btn btn-success">Create New User</button>
+    	<h2>Users</h2><button style="margin-bottom:10px;margin-right:10px;" onclick='ShowCreate();' class="btn btn-success">Create New User</button>
       <input type="text" onkeypress="FilterUsers(this);" onkeyup="FilterUsers(this);" style="width:300px;margin-bottom:5px;" placeholder="Search By ID, Name or Email" />
       <table id = "UserTable" class="table table-bordered table-striped">
       	<thead>

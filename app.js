@@ -93,7 +93,7 @@ app.post('/login', login.check_login);
 //--------------------------------User Routes------------------------------------------|
 
 //Create a new user
-app.post('/user', user.create_new_user);
+app.post('/user/', user.create_new_user);
 
 //Create a new administrator
 //app.post('/user/administrator', user.create_new_administrator);
