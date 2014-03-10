@@ -40,9 +40,9 @@
     function User_Reload(completionHandler){
       var self = this;
       $.get( serverAddress + "user/" + self.ID, function( data ) {
-        self.ID = data["users"]["ID"];
-        self.Name = data["users"]["Name"];
-        self.Email = data["users"]["Email"];
+        self.ID = data["ID"];
+        self.Name = data["Name"];
+        self.Email = data["Email"];
         completionHandler();
       });
     }
@@ -206,7 +206,7 @@
       </div>
 
       <!-- Main component for a primary marketing message or call to action -->
-    	<h2>Users</h2>
+    	<h2>Users</h2><button style="margin-bottom:10px;margin-right:10px;" class="btn btn-success">Create New User</button>
       <input type="text" onkeypress="FilterUsers(this);" onkeyup="FilterUsers(this);" style="width:300px;margin-bottom:5px;" placeholder="Search By ID, Name or Email" />
       <table id = "UserTable" class="table table-bordered table-striped">
       	<thead>

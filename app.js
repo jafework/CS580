@@ -20,6 +20,7 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(express.cookieParser());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -41,14 +42,30 @@ var session;
 var user = require('./routes/user')(connection);
 var login = require('./routes/login')(connection,session);
 
-var isLoggedIn
+
+var isLoggedIn = function(req,res){
+	console.log(req.cookies);
+	if(req.cookies['login'] == 'true'){
+		return true;
+	}
+	else{
+		res.writeHead(302, {
+  			'Location': '/login/'
+		});
+		res.end();
+		return false;
+	}
+};
+
 
 var schedule = require('./routes/schedule')(connection);
 
 app.get('/', routes.index);
 
 app.get('/administration', function(req, res){
-  res.sendfile(__dirname + '/public/static/administration.html');
+  	if(isLoggedIn(req,res) === true){
+  		res.sendfile(__dirname + '/public/static/administration.html');
+  	}
 });
 
 app.get('/login', function(req, res){
@@ -71,7 +88,7 @@ app.post('/login', login.check_login);
 //--------------------------------User Routes------------------------------------------|
 
 //Create a new user
-//app.post('/user', user.create_new_user);
+app.post('/user', user.create_new_user);
 
 //Create a new administrator
 //app.post('/user/administrator', user.create_new_administrator);

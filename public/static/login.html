@@ -41,10 +41,10 @@
             if(response == true){
               console.log(getCookie("admin"));
               if(getCookie("admin") == 'true'){
-                window.location = serverAddress + "administration";
+                window.location = serverAddress + "administration/";
               }
               else{
-                window.location = serverAddress + "calendar";
+                window.location = serverAddress + "calendar/";
               }
             }
         });

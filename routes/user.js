@@ -44,30 +44,31 @@ exports.get_user = function(req, res){
 		res.contentType('application/json');
   		var json = JSON.stringify(response);
   		res.send(json);
-
 	});
+}
+
+exports.create_new_user = function(req, res){
+	var username = req.body.username;
+	var password = req.body.password;
+	var name = req.body.name;
+
+	var query = "INSERT INTO `Users` (`Email`, `Password`, `Name`) VALUES (?, ?, ?)";
+	connection.query(query, [username, password, name], function(err, data) {
+		var response = "";
+		res.contentType('application/json');
+  		var json = JSON.stringify(response);
+  		res.send(json);
+	});
+
 }
 
 //Return Individual User Record With ID
 exports.get_user_ID = function(req, res){
 
-	connection.query('select * from Users', function(err, data) {	
+	var query = 'select * from Users where UserID = ' + req.params.ID;
+	connection.query(query , function(err, data) {	
 	
-		var userID = parseInt(req.params.ID);
-		console.log("abcd",userID);
-		console.log(data[1]["Name"]);
-		var userInfo;
-		for(index in data){
-			if(data[index]["UserID"] === userID){
-				userInfo = data[index]["Name"];
-				break;
-			}
-		}
-	
-		var response = {
-			"Name": userInfo,
-			"error": null
-		};
+		var response = data[0];
 		res.contentType('application/json');
   		var json = JSON.stringify(response);
   		res.send(json);
