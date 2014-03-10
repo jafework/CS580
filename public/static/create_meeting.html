@@ -4,10 +4,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Administration</title>
+    <title>CREATE MEETING</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-timepicker.min.css">
+    <link rel="stylesheet" href="//eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker.css">
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-timepicker.min.js"></script>
+	<script src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+
+
   <script>
 
     /*
@@ -40,9 +47,9 @@
     function User_Reload(completionHandler){
       var self = this;
       $.get( serverAddress + "user/" + self.ID, function( data ) {
-        self.ID = data["ID"];
-        self.Name = data["Name"];
-        self.Email = data["Email"];
+        self.ID = data["users"]["ID"];
+        self.Name = data["users"]["Name"];
+        self.Email = data["users"]["Email"];
         completionHandler();
       });
     }
@@ -62,6 +69,12 @@
     
 		$( document ).ready(function() {
 			fetchUsers();
+			$('#setDate').datepicker({
+			    format: "m-d-yy",
+			    autoclose: true
+			});
+			 $('#startTime').timepicker();
+			 $('#endTime').timepicker();
 		});
 
 		function fetchUsers(){
@@ -111,6 +124,7 @@
 					html += "<td>" + user["UserID"] + "</td>";
           html += "<td>" + "<button class='btn btn-primary' onclick='ShowUser("+ user["UserID"] + ");'>" + user["Name"] + "</button>" + "</td>";
 					html += "<td>" + user["Email"] + "</td>";
+					html += "<td><div class=\"checkbox\"><input type=\"checkbox\"></div></td>";
 					html += "</tr>";
 				}
         tableData = html;
@@ -206,16 +220,28 @@
       </div>
 
       <!-- Main component for a primary marketing message or call to action -->
-    	<h2>Users</h2><button style="margin-bottom:10px;margin-right:10px;" class="btn btn-success">Create New User</button>
+    	<h2>Users</h2>
       <input type="text" onkeypress="FilterUsers(this);" onkeyup="FilterUsers(this);" style="width:300px;margin-bottom:5px;" placeholder="Search By ID, Name or Email" />
       <table id = "UserTable" class="table table-bordered table-striped">
       	<thead>
-          <tr><th>ID</th><th>Name</th><th>Email</th></tr>
+          <tr><th>ID</th><th>Name</th><th>Email</th><th>Invite</th></tr>
         </thead>
         <tbody>
         </tbody>
       </table>
-
+	<table id = "meetingInfo"class="navbar-right">
+		<tr> <td>Date</td>
+		     <td>From</td>
+		     <td>To</td>
+		     <td>Room</td>
+		</tr>
+		<tr> <td><input id="setDate"> </input></td>
+		     <td><input id="startTime" value='StartTime'> </input></td>
+		     <td><input  id="endTime" value='endTime'> </input></td>
+		     <td><input id="room"> </input></td>
+		</tr>
+	</table>
+	<input type='submit' class="btn btn-primary navbar-right" id="Submit" value="Create Meeting" onclick="javascript:alert(1)"> 
       <!-- Modal -->
       <div class="modal fade" id="SelectedUserModal" tabindex="-1" role="dialog" aria-labelledby="SelectedUserLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -267,6 +293,5 @@
       </div>
 
     </div> <!-- /container -->
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   </body>
 </html>
