@@ -60,41 +60,27 @@ module.exports = function(con){
 	return exports;
 }
 
-//Return All Users
 exports.get_calendar = function(req, res){
 
 	connection.query('select * from Meeting', function(err, data) {
-
-		var inviterID = -1;
-		for(index in data)
-		{
-			if(data[index]["OwnerUserID"] != -1)
-			{
-				inviterId = data[index]["OwnerUserID"];
-
-				data[index]["OwnerUserID"] = getName(inviterId);
-				console.log(data[index]["OwnerUserID"]);
-			}
-		}		
 		var response = {
 			"events": data,
 			"error": null
 		};
 		res.contentType('application/json');
 	  	var json = JSON.stringify(response);
-		
 	  	res.send(json);
 	});
 }
 
-function getName(req, res)
+function getName(req)
 {
 	connection.query('select * from Users', function(err, data) {
-		for(index in data)
+		for(i in data)
 		{
-			if(req == data[index]["UserID"]){
-				console.log(data[index]["Name"]);
-				return data[index]["Name"];						
+			if(req == data[i]["UserID"]){
+				console.log(data[i]["Name"]);
+				return data[i]["Name"];						
 			}
 
 		}

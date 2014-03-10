@@ -64,7 +64,9 @@ app.get('/employee', function(req, res){
 app.get('/calendar', function(req, res){
   res.sendfile(__dirname + '/public/static/calendar.html');
 });
-
+app.get('/logout', function(req, res){
+  res.sendfile(__dirname + '/public/static/logout.html');
+});
 //--------------------------------Login Routes------------------------------------------|
 app.post('/login', login.check_login);
 
