@@ -67,6 +67,9 @@ app.get('/calendar', function(req, res){
 app.get('/logout', function(req, res){
   res.sendfile(__dirname + '/public/static/logout.html');
 });
+app.get('/create_meeting', function(req, res){
+  res.sendfile(__dirname + '/public/static/create_meeting.html');
+});
 //--------------------------------Login Routes------------------------------------------|
 app.post('/login', login.check_login);
 
