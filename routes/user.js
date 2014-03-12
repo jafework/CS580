@@ -94,7 +94,8 @@ exports.get_user_ID = function(req, res){
 
 //Delete User With ID
 exports.delete_user_with_ID = function(req, res){
-
+    var query = 'delete from Users where UserID = ' + req.params.ID;
+	connection.query(query);
 };
 /*
 app.post('/user/:ID', user.post_user_ID); 
