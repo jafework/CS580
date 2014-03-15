@@ -17,24 +17,6 @@
 
   <script>
 
-    /*
-        User Class:
-        An instance of this class represents a single User object.
-
-        Global Variables:
-        ID
-        Name
-        Email
-
-        Constructors:
-        User(ID)
-        User(ID,Name,Email)
-
-        Methods:
-        Save() - Saves the changes to the server
-        Reload() - Reloads the user data from the server
-    */
-
 
     function User(ID,Name,Email){
       this.ID = ID;
@@ -54,8 +36,50 @@
       });
     }
 
-    function User_Save(){
-      //Post Changes
+    function attendee_create(userData){
+      var checkbox;
+      var id, mid, sta;
+	console.log(userData);
+      for(var i = 0; i < userData["users"].length;i++)
+      {
+		
+		var user = userData["users"][i];
+		if($("#cb"+i).is(':checked')){
+			id =  user["UserID"];    	
+			mid = '1';
+			sta = 'none';
+			var postData = { attendeeID:id,
+					 mID : mid,
+					 stat: sta
+		      			};
+
+
+	      		$.post(serverAddress + "schedule/create_attendee/", postData, function(data){
+				console.log(data);
+			});
+		}
+	}
+    }
+
+    function meeting_create(){
+      
+      var mOwnerID = '1';
+      var mtitle = 'lunch';
+      var mstart = '2014-03-11T5:30:00';
+      var mend = '2014-03-11T12:30:00';
+      var mroom = '50';
+      var postData = {
+	OwnerUserID:mOwnerID,
+        title : mtitle,
+	start : mstart,
+        end : mend,
+        room: mroom
+      }
+
+      console.log(postData);
+      $.post(serverAddress + "schedule/create/", postData, function(data){
+		console.log(data);	
+	});
     }
 
   </script>
@@ -66,7 +90,8 @@
     var tableData; //All Downloaded Table Info
     var serverAddress = "http://localhost:3000/";
     var currentUser = null;
-    
+    var	nUsers = 0;
+    var userData;
 		$( document ).ready(function() {
 			fetchUsers();
 			$('#setDate').datepicker({
@@ -75,56 +100,25 @@
 			});
 			 $('#startTime').timepicker();
 			 $('#endTime').timepicker();
+			
+			$('#submit_meeting').click(function(){
+				attendee_create(userData);
+				meeting_create();
+			});
 		});
 
 		function fetchUsers(){
-      /*
-          To fetch the users we need to make a GET request to the API.
-          The API route that returns a json list of all of the users is
-          "http://{serverAddress}/user/" or "http://{serverAddress}/user"
-
-          The returned response looks like:
-          ---------------------------------
-          {
-
-            "users": [
-              {
-                "ID": 1,
-                "Name": "Joseph",
-                "Email": "test@test.com"
-              },
-              {
-                "ID": 2,
-                "Name": "Lan",
-                "Email": "lan@gmail.com"
-              }
-            ],
-            "error": {
-              "code": 0,
-              "status": "success"
-            }
-          }
-          ---------------------------------
-
-          The users array contains an array of all the users and some basic information.
-          The error array contains a universal error response code from the API, and a status message.
-          The status message will contain detailed error messages from the server if they occur.
-          
-          After the response is fetched, we just need to create HTML elements and insert them into the table.
-          We also set the tableData object to the final html so that we can reset the table when searching later.
-      */
-
 			$.get( serverAddress + "user", function( data ) {
-				console.log(data);
-				// data variable contains the json response
-        var html = "";
-				for(var i = 0; i<data["users"].length;i++){
+        			var html = "";
+				nUsers = data["users"].length;
+				userData = data;
+				for(var i = 0; i<nUsers;i++){
 					var user = data["users"][i];
 					html += "<tr>";
 					html += "<td>" + user["UserID"] + "</td>";
           html += "<td>" + "<button class='btn btn-primary' onclick='ShowUser("+ user["UserID"] + ");'>" + user["Name"] + "</button>" + "</td>";
 					html += "<td>" + user["Email"] + "</td>";
-					html += "<td><div class=\"checkbox\"><input type=\"checkbox\"></div></td>";
+					html += "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"cb" + i + "\"></div></td>";
 					html += "</tr>";
 				}
         tableData = html;
@@ -240,8 +234,13 @@
 		     <td><input  id="endTime" value='endTime'> </input></td>
 		     <td><input id="room"> </input></td>
 		</tr>
+		<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><input type='submit' class="btn btn-primary navbar-right" id="submit_meeting" value="Create Meeting"></td>
+		</tr>
 	</table>
-	<input type='submit' class="btn btn-primary navbar-right" id="Submit" value="Create Meeting" onclick="javascript:alert(1)"> 
       <!-- Modal -->
       <div class="modal fade" id="SelectedUserModal" tabindex="-1" role="dialog" aria-labelledby="SelectedUserLabel" aria-hidden="true">
         <div class="modal-dialog">

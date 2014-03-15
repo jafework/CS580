@@ -101,6 +101,11 @@ app.post('/user/', user.create_new_user);
 //Return meeting
 app.get('/schedule', schedule.get_calendar);
 
+//create meeting
+app.post('/schedule/create/', schedule.create_new_meeting);
+
+//create attendee
+app.post('/schedule/create_attendee/', schedule.create_attendee);
 //Return All Users
 app.get('/user', user.get_user); 
 

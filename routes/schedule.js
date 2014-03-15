@@ -73,6 +73,43 @@ exports.get_calendar = function(req, res){
 	});
 }
 
+exports.create_new_meeting = function(req, res){
+	console.log(req.body);
+	var OwnerUserID = req.body.OwnerUserID;
+	var title = req.body.title;
+	var start = req.body.start;
+	var end = req.body.end;
+	var room = req.body.room;
+
+	var query = "INSERT INTO `Meeting` (`OwnerUserID`, `title`, `start`,`end`,`room`) VALUES (?, ?, ?, ?, ?)";
+	connection.query(query, [OwnerUserID, title, start, end, room], function(err, data) {
+		var response = "";
+		res.contentType('application/json');
+  		var json = JSON.stringify(response);
+  		res.send(json);
+		console.log(data);
+	});
+
+}
+
+exports.create_attendee = function(req, res){
+	console.log(req.body);
+	var AttendeeUserID = req.body.attendeeID;
+	var MeetingID = req.body.mID;
+	var Status = req.body.stat;
+	
+
+	var query = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES (?, ?, ?)";
+	connection.query(query, [AttendeeUserID, MeetingID, Status], function(err, data) {
+		var response = "";
+		res.contentType('application/json');
+  		var json = JSON.stringify(response);
+  		res.send(json);
+	});
+
+}
+
+
 function getName(req)
 {
 	connection.query('select * from Users', function(err, data) {
