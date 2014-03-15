@@ -48,12 +48,15 @@ exports.get_user = function(req, res){
 }
 
 exports.create_new_user = function(req, res){
-	var username = req.body.username;
+	
+
+	var email = req.body.email;
 	var password = req.body.password;
 	var name = req.body.name;
-
+		
 	var query = "INSERT INTO `Users` (`Email`, `Password`, `Name`) VALUES (?, ?, ?)";
-	connection.query(query, [username, password, name], function(err, data) {
+	connection.query(query, [email, password, name], function(err, data) {
+		console.log(data);
 		var response = "";
 		res.contentType('application/json');
   		var json = JSON.stringify(response);
