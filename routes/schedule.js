@@ -86,11 +86,11 @@ exports.create_new_meeting = function(req, res){
 	var query = "INSERT INTO `Meeting` (`OwnerUserID`, `title`, `start`,`end`,`room`) VALUES (?, ?, ?, ?, ?)";
 	connection.query(query, [OwnerUserID, title, start, end, room], function(err, data) {
 		
-		var MeetingID = data["insertID"];
+		var MeetingID = data.insertId;
 
 		var insertAttendeeQuery = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES "
 		for(var i = 0; i < invitedUsers.length ; i++){
-			insertAttendeeQuery = insertAttendeeQuery + "(" + invitedUsers[i].attendeeID + "," + invitedUsers[i].mID + ",'" + invitedUsers[i].stat + "')";
+			insertAttendeeQuery = insertAttendeeQuery + "(" + invitedUsers[i].attendeeID + "," + MeetingID + ",'" + invitedUsers[i].stat + "')";
 			if(i+1 < invitedUsers.length){
 				insertAttendeeQuery = insertAttendeeQuery + ",";
 			}
