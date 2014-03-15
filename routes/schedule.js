@@ -75,19 +75,37 @@ exports.get_calendar = function(req, res){
 
 exports.create_new_meeting = function(req, res){
 	console.log(req.body);
+
 	var OwnerUserID = req.body.OwnerUserID;
 	var title = req.body.title;
 	var start = req.body.start;
 	var end = req.body.end;
 	var room = req.body.room;
+	var invitedUsers = req.body.invited;
 
 	var query = "INSERT INTO `Meeting` (`OwnerUserID`, `title`, `start`,`end`,`room`) VALUES (?, ?, ?, ?, ?)";
 	connection.query(query, [OwnerUserID, title, start, end, room], function(err, data) {
-		var response = "";
-		res.contentType('application/json');
-  		var json = JSON.stringify(response);
-  		res.send(json);
-		console.log(data);
+		
+		var MeetingID = data["insertID"];
+
+		var insertAttendeeQuery = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES "
+		for(var i = 0; i < invitedUsers.length ; i++){
+			insertAttendeeQuery = insertAttendeeQuery + "(" + invitedUsers[i].attendeeID + "," + invitedUsers[i].mID + ",'" + invitedUsers[i].stat + "')";
+			if(i+1 < invitedUsers.length){
+				insertAttendeeQuery = insertAttendeeQuery + ",";
+			}
+		}
+
+		console.log(insertAttendeeQuery);
+
+		var query = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES (?, ?, ?)";
+		connection.query(insertAttendeeQuery, function(err, data) {
+			var response = "";
+			res.contentType('application/json');
+	  		var json = JSON.stringify(response);
+	  		res.send(json);
+		});
+
 	});
 
 }

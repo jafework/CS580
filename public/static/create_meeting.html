@@ -68,18 +68,37 @@
       var mstart = '2014-03-11T5:30:00';
       var mend = '2014-03-11T12:30:00';
       var mroom = '50';
+
+      var invitedUsers = Array();
+
+      for(var i = 0; i < userData["users"].length;i++){
+        var user = userData["users"][i];
+        if($("#cb"+i).is(':checked')){
+          id =  user["UserID"];     
+          mid = '1';
+          sta = 'invited';
+          invitedUsers.push({ 
+            attendeeID:id,
+            mID : mid,
+            stat: sta
+          });
+        }
+      }
+
       var postData = {
-	OwnerUserID:mOwnerID,
+        OwnerUserID: mOwnerID,
         title : mtitle,
-	start : mstart,
+        start : mstart,
         end : mend,
-        room: mroom
+        room: mroom,
+        invited: invitedUsers
       }
 
       console.log(postData);
       $.post(serverAddress + "schedule/create/", postData, function(data){
-		console.log(data);	
-	});
+		    console.log(data);	
+      });
+
     }
 
   </script>
@@ -102,7 +121,6 @@
 			 $('#endTime').timepicker();
 			
 			$('#submit_meeting').click(function(){
-				attendee_create(userData);
 				meeting_create();
 			});
 		});
