@@ -65,27 +65,37 @@ exports.get_calendar = function(req, res){
 	//var userID = console.log(req.body.userID);
 	var userID = 3;
 
-	var query = "SELECT `MeetingID` FROM `Attendee` WHERE Attendee.AttendeeUserID = " + userID; 
+	var query = "SELECT `MeetingID` FROM `Attendee` WHERE Attendee.AttendeeUserID = " + userID + " and Attendee.Status='accept' "; 
 	var innerquery ="";
+	var response;
 	connection.query(query, function(err, data) {
-		console.log(data);
-			innerquery = "SELECT `title`, `start`, `end`, `room` FROM `Meeting` WHERE Meeting.id = " 
-			for(var i = 0; i < data.length; i++)
+		//console.log(data);
+			if(typeof data === "undefined")
 			{
-				innerquery += data[i].MeetingID;
-				if((i+1)<data.length)
-					innerquery+= " or Meeting.id = " ;
-				
-			}
-			connection.query(innerquery, function(err, event) {
-				var response = {
-					"events": event,
-					"error": null
-				};
+				response = "";
 				res.contentType('application/json');
-		  		var json = JSON.stringify(response);
-		  		res.send(json);
-			});
+	  			var json = JSON.stringify(response);
+	  			res.send(json);
+			}
+			else {
+				innerquery = "SELECT `title`, `start`, `end`, `room` FROM `Meeting` WHERE Meeting.id = " 
+				for(var i = 0; i < data.length; i++)
+				{
+					innerquery += data[i].MeetingID;
+					if((i+1)<data.length)
+						innerquery+= " or Meeting.id = " ;
+				
+				}
+				connection.query(innerquery, function(err, event) {
+					var response = {
+						"events": event,
+						"error": null
+					};
+					res.contentType('application/json');
+			  		var json = JSON.stringify(response);
+			  		res.send(json);
+				});
+			}
 	});
 }
 
