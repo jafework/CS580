@@ -62,14 +62,30 @@ module.exports = function(con){
 
 exports.get_calendar = function(req, res){
 
-	connection.query('select * from Meeting', function(err, data) {
-		var response = {
-			"events": data,
-			"error": null
-		};
-		res.contentType('application/json');
-	  	var json = JSON.stringify(response);
-	  	res.send(json);
+	//var userID = console.log(req.body.userID);
+	var userID = 3;
+
+	var query = "SELECT `MeetingID` FROM `Attendee` WHERE Attendee.AttendeeUserID = " + userID; 
+	var innerquery ="";
+	connection.query(query, function(err, data) {
+		console.log(data);
+			innerquery = "SELECT `title`, `start`, `end`, `room` FROM `Meeting` WHERE Meeting.id = " 
+			for(var i = 0; i < data.length; i++)
+			{
+				innerquery += data[i].MeetingID;
+				if((i+1)<data.length)
+					innerquery+= " or Meeting.id = " ;
+				
+			}
+			connection.query(innerquery, function(err, event) {
+				var response = {
+					"events": event,
+					"error": null
+				};
+				res.contentType('application/json');
+		  		var json = JSON.stringify(response);
+		  		res.send(json);
+			});
 	});
 }
 
