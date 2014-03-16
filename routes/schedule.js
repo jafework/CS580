@@ -127,6 +127,16 @@ exports.create_attendee = function(req, res){
 
 }
 
+exports.get_invites = function(req, res){
+	var userID = req.cookies['id'];
+	var query = 'select * from Attendee, Meeting, Users Where Meeting.OwnerUserID = Users.UserID AND  Meeting.id = Attendee.MeetingID AND AttendeeUserID = ? and Status="invited"';
+	connection.query(query, userID , function(err, data) {
+		console.log(data);
+		res.contentType('application/json');
+	  	var json = JSON.stringify(data);
+	  	res.send(json);
+	});
+}
 
 function getName(req)
 {

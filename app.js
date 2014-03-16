@@ -82,10 +82,16 @@ app.get('/calendar', function(req, res){
   res.sendfile(__dirname + '/public/static/calendar.html');
 });
 app.get('/logout', function(req, res){
+  res.clearCookie('login');
+  res.clearCookie('id');
+  res.clearCookie('admin');
   res.sendfile(__dirname + '/public/static/logout.html');
 });
 app.get('/create_meeting', function(req, res){
   res.sendfile(__dirname + '/public/static/create_meeting.html');
+});
+app.get('/invites', function(req, res){
+  res.sendfile(__dirname + '/public/static/invites.html');
 });
 //--------------------------------Login Routes------------------------------------------|
 app.post('/login', login.check_login);
@@ -100,6 +106,8 @@ app.post('/user/', user.create_new_user);
 
 //Return meeting
 app.get('/schedule', schedule.get_calendar);
+
+app.get('/schedule/invites', schedule.get_invites);
 
 //create meeting
 app.post('/schedule/create/', schedule.create_new_meeting);

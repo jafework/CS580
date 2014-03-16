@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pending Requests</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	
+  <script>
+
+    function Meeting(ID){
+      this.ID = ID;
+      this.Title = Title;
+      this.OwnerName = OwnerName;
+      this.UpdateStatus = Update_Status;
+    }
+
+    function Update_Status(completionHandler){
+      
+      var newName = $('#SelectedUserEditName').val();
+      var newEmail = $('#SelectedUserEditEmail').val();
+      var newPassword = $('#SelectedUserEditNewPasswordConfirm').val();
+      var postData = {
+        name : newName,
+        email : newEmail,
+        password: newPassword
+      }
+
+      $.post(serverAddress + "user/", postData, function(data){
+        completionHandler();
+      });
+    }
+
+  </script>
+  
+  <script>
+
+    //GLOBAL VARIABLES
+    var tableData; //All Downloaded Table Info
+    var serverAddress = "http://localhost:3000/";
+    
+		$( document ).ready(function() {
+			ReloadRequests();
+		});
+
+		function ReloadRequests(){
+      // Creator  Title Start Time  End Time  Location  Status
+			$.get( serverAddress + "schedule/invites", function( data ) {
+        var html = "";
+				for(var i = 0; i<data.length;i++){
+					var meeting = data[i];
+					html += "<tr>";
+					html += "<td>" + meeting.Name + "</td>";
+          html += "<td>" + meeting.title + "</td>";
+          html += "<td>" + localize(meeting.start) + "</td>";
+          html += "<td>" + localize(meeting.end) + "</td>";
+          html += "<td>" + meeting.Room + "</td>";
+          html += "<td>" + "<button style='margin-right:10px;' class='btn btn-success' onclick='UdateStatus("+ meeting.MeetingID + ");'>Accept</button>";
+          html += "<button class='btn btn-danger' onclick='UdateStatus("+ meeting.MeetingID + ");'>Decline</button></td>";
+					html += "</tr>";
+				}
+        tableData = html;
+				$("#UserTable tbody").html(tableData);
+			});
+		}
+
+    function localize(t){
+      var d = new Date(t);
+      return d.toString().replace(/GMT.*/g,"");
+    }
+
+	</script>
+
+  </head>
+  <body>
+        <div class="container">
+
+      <!-- Static navbar -->
+      <div class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Bronco Meeting Center</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a>Manage Users</a></li>
+                  <li><a href="#">Manage Rooms</a></li>
+                  <li><a href="#">Manage Meetings</a></li>
+                </ul>
+              </li>
+              <li><a href="#">My Calendar</a></li>
+              <li><a href="#">My Avaliablity</a></li>
+    <li class="active">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage Meeting <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/create_meeting">Create Meeting</a></li>
+                  <li><a href="#">Cancel Meeting</a></li>
+                  <li class="active"><a href="/invites">Pending Requests</a></li>
+                </ul>
+              </li>
+            </ul>
+      <li>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="./">Account Settings</a></li>
+              <li><a href="/logout">Sign Out</a></li>
+            </ul>
+      </li>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </div>
+
+      <!-- Main component for a primary marketing message or call to action -->
+    	<h2>Pending Requests</h2>
+      <table id = "UserTable" class="table table-bordered table-striped">
+      	<thead>
+          <tr><th>Creator</th><th>Title</th><th>Start Time</th><th>End Time</th><th>Location</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+      <!-- Modal -->
+      <div class="modal fade" id="SelectedUserModal" tabindex="-1" role="dialog" aria-labelledby="SelectedUserLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="SelectedUserTitle">Modal title</h4>
+            </div>
+            <div class="modal-body">
+              
+              <div id ="SelectedUserDefault">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Name</label><br>
+                  <h4><span class="label label-primary" id="SelectedUserDefaultName">Joseph Afework</span></h4>
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Email Address</label><br>
+                  <h4><span class="label label-primary" id="SelectedUserDefaultEmail">test@test.com</span></h4>
+                </div>
+              </div>
+
+              <div id ="SelectedUserEdit" style="display:none;">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Name</label>
+                  <input type="text" class="form-control" id="SelectedUserEditName" placeholder="Name">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Email address</label>
+                  <input type="email" class="form-control" id="SelectedUserEditEmail" placeholder="Email">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">New Password</label>
+                  <input type="password" class="form-control" id="SelectedUserEditNewPassword" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Confirm New Password</label>
+                  <input type="password" class="form-control" id="SelectedUserEditNewPasswordConfirm" placeholder="Password">
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button id="SelectedUserEditButton" type="button" class="btn btn-warning" onclick="EditUser();">Edit User</button>
+              <button id="SelectedUserSaveButton" type="button" class="btn btn-danger" style="display:none;" onclick="SaveUser();">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- /container -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </body>
+</html>
