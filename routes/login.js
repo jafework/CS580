@@ -19,18 +19,29 @@ exports.check_login = function(req, res){
 			response = true;
 			res.cookie('login', 'true');
 			res.cookie('id', data[0]['UserID']);
-			res.cookie('admin','true');
+			connection.query('select * from Admin where UserID = ?', data[0]['UserID'] , function(err, data) {	
+				if(data.length == 0){
+					res.cookie('admin','false');
+				}
+				else{
+					res.cookie('admin','true');
+				}
+
+				res.contentType('application/json');
+		  		var json = JSON.stringify(response);
+		  		res.send(json);
+			});	
 		}
 		else{
 			response = false;
 			res.clearCookie('login');
 			res.clearCookie('id');
 			res.clearCookie('admin');
-		}
 
-		res.contentType('application/json');
-  		var json = JSON.stringify(response);
-  		res.send(json);
+			res.contentType('application/json');
+  			var json = JSON.stringify(response);
+  			res.send(json);
+		}
 
 	});
 }
