@@ -61,13 +61,13 @@
 	}
     }
 
-    function meeting_create(){
+    function meeting_create(title,date,start,end,room){
       
       var mOwnerID = '1';
-      var mtitle = 'lunch';
-      var mstart = '2014-03-11T5:30:00';
-      var mend = '2014-03-11T12:30:00';
-      var mroom = '50';
+      var mtitle = title;
+      var mstart = date+'T'+start;
+      var mend = date+'T'+end;
+      var mroom = room;
 
       var invitedUsers = Array();
 
@@ -85,6 +85,8 @@
         }
       }
 
+      if(invitedUsers.length == 0)
+	return;
       var postData = {
         OwnerUserID: mOwnerID,
         title : mtitle,
@@ -114,14 +116,22 @@
 		$( document ).ready(function() {
 			fetchUsers();
 			$('#setDate').datepicker({
-			    format: "m-d-yy",
+			    format: "yyyy-mm-dd",
 			    autoclose: true
 			});
-			 $('#startTime').timepicker();
-			 $('#endTime').timepicker();
+			 $('#startTime').timepicker({
+					showMeridian:false,
+					showSeconds:true
+				});
+			 $('#endTime').timepicker({
+				showMeridian:false,
+				showSeconds:true
+			});
 			
 			$('#submit_meeting').click(function(){
-				meeting_create();
+				meeting_create($("#Title").val(), $("#setDate").val(), 
+					       $("#startTime").val(), $("#endTime").val(), 
+					       $("#room").val());
 			});
 		});
 
@@ -242,17 +252,20 @@
         </tbody>
       </table>
 	<table id = "meetingInfo"class="navbar-right">
-		<tr> <td>Date</td>
+		<tr> <td>Title</td>
+	             <td>Date</td>
 		     <td>From</td>
 		     <td>To</td>
 		     <td>Room</td>
 		</tr>
-		<tr> <td><input id="setDate"> </input></td>
+		<tr> <td><input id="Title"> </input></td>
+		     <td><input id="setDate"> </input></td>
 		     <td><input id="startTime" value='StartTime'> </input></td>
 		     <td><input  id="endTime" value='endTime'> </input></td>
 		     <td><input id="room"> </input></td>
 		</tr>
 		<tr>
+		<td></td>
 		<td></td>
 		<td></td>
 		<td></td>

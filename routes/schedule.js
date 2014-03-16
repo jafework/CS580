@@ -62,8 +62,7 @@ module.exports = function(con){
 
 exports.get_calendar = function(req, res){
 
-	//var userID = console.log(req.body.userID);
-	var userID = 3;
+	var userID = req.query.userID;
 
 	var query = "SELECT `MeetingID` FROM `Attendee` WHERE Attendee.AttendeeUserID = " + userID + " and Attendee.Status='accept' "; 
 	var innerquery ="";
@@ -113,24 +112,33 @@ exports.create_new_meeting = function(req, res){
 	connection.query(query, [OwnerUserID, title, start, end, room], function(err, data) {
 		
 		var MeetingID = data.insertId;
-
-		var insertAttendeeQuery = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES "
-		for(var i = 0; i < invitedUsers.length ; i++){
-			insertAttendeeQuery = insertAttendeeQuery + "(" + invitedUsers[i].attendeeID + "," + MeetingID + ",'" + invitedUsers[i].stat + "')";
-			if(i+1 < invitedUsers.length){
-				insertAttendeeQuery = insertAttendeeQuery + ",";
-			}
-		}
-
-		console.log(insertAttendeeQuery);
-
-		var query = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES (?, ?, ?)";
-		connection.query(insertAttendeeQuery, function(err, data) {
+		
+		if(typeof invitedUsers === "undefined")
+		{
 			var response = "";
 			res.contentType('application/json');
 	  		var json = JSON.stringify(response);
 	  		res.send(json);
-		});
+		}
+		else{
+			var insertAttendeeQuery = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES "
+			for(var i = 0; i < invitedUsers.length ; i++){
+				insertAttendeeQuery = insertAttendeeQuery + "(" + invitedUsers[i].attendeeID + "," + MeetingID + ",'" + invitedUsers[i].stat + "')";
+				if(i+1 < invitedUsers.length){
+					insertAttendeeQuery = insertAttendeeQuery + ",";
+				}
+			}
+
+			console.log(insertAttendeeQuery);
+
+			var query = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES (?, ?, ?)";
+			connection.query(insertAttendeeQuery, function(err, data) {
+				var response = "";
+				res.contentType('application/json');
+		  		var json = JSON.stringify(response);
+		  		res.send(json);
+			});
+		}
 
 	});
 

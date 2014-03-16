@@ -36,15 +36,15 @@
           password: $pass.val()
         }
         $.post( serverAddress + "login", credentials , function( response ) {
-            console.log(response);
+            //console.log(response);
             console.log(document.cookie);
             if(response == true){
-              console.log(getCookie("admin"));
+              //console.log(getCookie("id"));
               if(getCookie("admin") == 'true'){
                 window.location = serverAddress + "administration/";
               }
               else{
-                window.location = serverAddress + "calendar/";
+                window.location = serverAddress + "calendar?id="+getCookie("id");
               }
             }
         });
