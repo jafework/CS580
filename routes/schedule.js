@@ -161,6 +161,25 @@ exports.create_attendee = function(req, res){
 
 }
 
+exports.update_status = function(req, res){
+	var AttendeeUserID = req.body.aID;
+	var mID = req.body.mID;
+	var Status = req.body.stat;
+	
+	var query = "UPDATE `Attendee` SET Status = \"" + Status 
+			  + "\" Where AttendeeUserID= " + AttendeeUserID + 
+			     " AND " + "MeetingID = " + mID;
+
+	//console.log(query);
+	connection.query(query, function(err, data) {
+		var response = "";
+		res.contentType('application/json');
+  		var json = JSON.stringify(response);
+  		res.send(json);
+	});
+
+}
+
 exports.get_invites = function(req, res){
 	var userID = req.cookies['id'];
 	var query = 'select * from Attendee, Meeting, Users Where Meeting.OwnerUserID = Users.UserID AND  Meeting.id = Attendee.MeetingID AND AttendeeUserID = ? and Status="invited"';

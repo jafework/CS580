@@ -114,6 +114,9 @@ app.post('/schedule/create/', schedule.create_new_meeting);
 
 //create attendee
 app.post('/schedule/create_attendee/', schedule.create_attendee);
+
+//create attendee
+app.post('/schedule/update_status/', schedule.update_status);
 //Return All Users
 app.get('/user', user.get_user); 
 

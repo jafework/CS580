@@ -38,6 +38,7 @@
   <script>
 
     //GLOBAL VARIABLES
+    var MeetingData;
     var tableData; //All Downloaded Table Info
     var serverAddress = "http://localhost:3000/";
     
@@ -45,21 +46,57 @@
 			ReloadRequests();
 		});
 
+		function getCookie(cname){
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0; i<ca.length; i++)
+			  {
+			  var c = ca[i].trim();
+			  if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+			}
+			return "";
+		      }
+
+		function UdateStatus(meetingID, state, number)
+		{
+			console.log(state);
+			if(state=="accept")
+			{
+				$("#d" + number).hide();
+				$("#a" + number).prop('disabled',true);
+			}
+			if(state=="decline")
+			{
+				$("#a" + number).hide();
+				$("#d" + number).prop('disabled',true);
+			}
+			
+			var postData = {
+			aID: getCookie('id'),
+			mID: meetingID,
+			stat : state
+		      }
+
+		      console.log(postData);
+		      $.post(serverAddress + "schedule/update_status/", postData, function(data){
+				    console.log(data);	
+		      });
+		}
 		function ReloadRequests(){
       // Creator  Title Start Time  End Time  Location  Status
 			$.get( serverAddress + "schedule/invites", function( data ) {
-        var html = "";
+        			var html = "";
 				for(var i = 0; i<data.length;i++){
 					var meeting = data[i];
 					html += "<tr>";
 					html += "<td>" + meeting.Name + "</td>";
-          html += "<td>" + meeting.title + "</td>";
-          html += "<td>" + localize(meeting.start) + "</td>";
-          html += "<td>" + localize(meeting.end) + "</td>";
-          html += "<td>" + meeting.Room + "</td>";
-          html += "<td>" + "<button style='margin-right:10px;' class='btn btn-success' onclick='UdateStatus("+ meeting.MeetingID + ");'>Accept</button>";
-          html += "<button class='btn btn-danger' onclick='UdateStatus("+ meeting.MeetingID + ");'>Decline</button></td>";
-					html += "</tr>";
+				  html += "<td>" + meeting.title + "</td>";
+				  html += "<td>" + localize(meeting.start) + "</td>";
+				  html += "<td>" + localize(meeting.end) + "</td>";
+				  html += "<td>" + meeting.Room + "</td>";
+				  html += "<td>" + "<button id = \"a"+ i +"\" style='margin-right:10px;' class='btn btn-success'  onclick='UdateStatus("+ meeting.MeetingID + ",\"accept\"," + i+");'>Accept</button>";
+				  html += "<button id = \"d"+ i +"\" class='btn btn-danger' onclick='UdateStatus("+ meeting.MeetingID + ",\"decline\"," + i+");'>Decline</button></td>";
+								html += "</tr>";
 				}
         tableData = html;
 				$("#UserTable tbody").html(tableData);
