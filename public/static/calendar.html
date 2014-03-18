@@ -16,7 +16,7 @@
     <script src='js/lib/moment.min.js'></script>
 		
 		<script src='js/lib/jquery-ui.custom.min.js'></script>
-		<script src='js/fullcalendar/fullcalendar.min.js'></script>
+		<script src='js/fullcalendar/fullcalendar.js'></script>
     <!-- end calendar requirement -->
 
   <script>
@@ -68,17 +68,56 @@
 
     //GLOBAL VARIABLES
     var tableData; //All Downloaded Table Info
+    var tData = new Array();
     var serverAddress = "http://localhost:3000/";
     var currentUser = null;
     
 		$( document ).ready(function() {
-			var userid = getParam("id");
-			fetchUsers(userid);
+			$.get( serverAddress + "user", function( data ) {
+				data.users.forEach(function(entry){
+					tData.push({UserID: entry.UserID, Name: entry.Name});
+				});
+			});
+			fetchUsers(getCookie('id'));
 		});
+
+		function lookUpName(ID)
+		{
+			for(var i = 0; i < tData.length; i++)
+			{
+				if(tData[i].UserID == ID)
+					return tData[i].Name;
+			}
+		}
+
+		function getCookie(cname){
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0; i<ca.length; i++)
+			  {
+			  var c = ca[i].trim();
+			  if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+			}
+			return "";
+		      }
 
 		function fetchUsers(userid){
 			$.get( serverAddress + "schedule", {userID:userid}, function( data ) {
-				console.log(data.events);
+				//var schedule = data.events;
+				//console.log(data.events);
+				if(typeof data.events === undefined)
+				{
+					return;
+				}
+				for( var i  = 0; i < data.events.length; i++)
+				{
+					var meeting = data.events[i];
+					if(userid != meeting.OwnerUserID)
+					data.events[i].title = meeting.title + "\nInvited By:" + lookUpName(meeting.OwnerUserID) + "\nRoom #:" + meeting.room;
+					data.events[i].start = localize(meeting.start);
+					data.events[i].end = localize(meeting.end);
+				}	
+				schedule = data.events;
 				$('#calendar').fullCalendar
 				({
 					header: {
@@ -87,7 +126,7 @@
 						right: 'month,basicWeek,basicDay'
 					},
 					defaultDate: new Date(),
-					events:data.events
+					events:schedule
 				});
 			})
 		}
@@ -106,6 +145,10 @@
 	  return sval;
 	}
 
+     function localize(t){
+      var d = new Date(t);
+      return d.toString().replace(/GMT.*/g,"");
+    }
     function ShowUser(ID){
       currentUser = new User(ID,null,null);
       var completionHandler = function(){

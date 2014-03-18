@@ -63,7 +63,7 @@
 
     function meeting_create(title,date,start,end,room){
       
-      var mOwnerID = '1';
+      var mOwnerID = getCookie('id');
       var mtitle = title;
       var mstart = date+'T'+start;
       var mend = date+'T'+end;
@@ -100,8 +100,7 @@
       $.post(serverAddress + "schedule/create/", postData, function(data){
 		    console.log(data);	
       });
-
-    }
+}
 
   </script>
   
@@ -115,6 +114,7 @@
     var userData;
 		$( document ).ready(function() {
 			fetchUsers();
+			
 			$('#setDate').datepicker({
 			    format: "yyyy-mm-dd",
 			    autoclose: true
@@ -135,6 +135,17 @@
 			});
 		});
 
+		function getCookie(cname){
+			var name = cname + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0; i<ca.length; i++)
+			  {
+			  var c = ca[i].trim();
+			  if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+			}
+			return "";
+		      }
+
 		function fetchUsers(){
 			$.get( serverAddress + "user", function( data ) {
         			var html = "";
@@ -142,6 +153,8 @@
 				userData = data;
 				for(var i = 0; i<nUsers;i++){
 					var user = data["users"][i];
+					if(user["UserID"] == getCookie('id'))
+						continue;
 					html += "<tr>";
 					html += "<td>" + user["UserID"] + "</td>";
           html += "<td>" + "<button class='btn btn-primary' onclick='ShowUser("+ user["UserID"] + ");'>" + user["Name"] + "</button>" + "</td>";

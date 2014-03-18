@@ -77,7 +77,7 @@ exports.get_calendar = function(req, res){
 	  			res.send(json);
 			}
 			else {
-				innerquery = "SELECT `title`, `start`, `end`, `room` FROM `Meeting` WHERE Meeting.id = " 
+				innerquery = "SELECT `OwnerUserID`, `title`, `start`, `end`, `room` FROM `Meeting` WHERE Meeting.id = " ;
 				for(var i = 0; i < data.length; i++)
 				{
 					innerquery += data[i].MeetingID;
@@ -86,6 +86,7 @@ exports.get_calendar = function(req, res){
 				
 				}
 				connection.query(innerquery, function(err, event) {
+					console.log(event);
 					var response = {
 						"events": event,
 						"error": null
@@ -107,12 +108,13 @@ exports.create_new_meeting = function(req, res){
 	var end = req.body.end;
 	var room = req.body.room;
 	var invitedUsers = req.body.invited;
+	var MeetingID;
 
 	var query = "INSERT INTO `Meeting` (`OwnerUserID`, `title`, `start`,`end`,`room`) VALUES (?, ?, ?, ?, ?)";
 	connection.query(query, [OwnerUserID, title, start, end, room], function(err, data) {
 		
-		var MeetingID = data.insertId;
-		
+
+		MeetingID = data.insertId;
 		if(typeof invitedUsers === "undefined")
 		{
 			var response = "";
@@ -133,14 +135,18 @@ exports.create_new_meeting = function(req, res){
 
 			var query = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES (?, ?, ?)";
 			connection.query(insertAttendeeQuery, function(err, data) {
-				var response = "";
-				res.contentType('application/json');
-		  		var json = JSON.stringify(response);
-		  		res.send(json);
+				var query = "INSERT INTO `Attendee` (`AttendeeUserID`, `MeetingID`, `Status`) VALUES (?, ?, ?)";
+				connection.query(query, [OwnerUserID, MeetingID, "accept"], function(err, data) {
+					var response = "";
+					res.contentType('application/json');
+			  		var json = JSON.stringify(response);
+			  		res.send(json);
+				});
 			});
-		}
 
+		}
 	});
+
 
 }
 

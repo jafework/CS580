@@ -36,7 +36,8 @@ module.exports = function(con){
 
 exports.get_user = function(req, res){
 	
-	connection.query('select * from Users', function(err, data) {		
+	connection.query('select * from Users', function(err, data) {	
+		console.log(data);	
 		var response = {
 			"users": data,
 			"error": null
